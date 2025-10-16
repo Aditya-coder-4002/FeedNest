@@ -1,0 +1,46 @@
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+
+# Maven
+target/
+
+# Gradle
+.gradle/
+build/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# Environment / Config files
+.env
