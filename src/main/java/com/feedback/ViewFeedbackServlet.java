@@ -1,41 +1,59 @@
 package com.feedback;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class ViewFeedbackServlet
- */
-@WebServlet("/ViewFeedbackServlet")
 public class ViewFeedbackServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ViewFeedbackServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("adminUser") == null) {
+            response.sendRedirect("admin_login.jsp");
+            return;
+        }
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        out.println("<html><head><title>Feedbacks</title>");
+        out.println("<style>body{font-family:Arial;} table{border-collapse:collapse;width:80%;margin:20px auto;} "
+            + "th,td{border:1px solid #ccc;padding:8px;text-align:left;} th{background:#f4f4f4;} "
+            + "a{display:block;margin:20px;text-align:center;}</style></head><body>");
+        out.println("<h2 style='text-align:center;'>All Feedbacks</h2>");
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM feedback ORDER BY id DESC");
+
+            out.println("<table><tr><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Time</th></tr>");
+            while (rs.next()) {
+                out.println("<tr>");
+                out.println("<td>" + rs.getInt("id") + "</td>");
+                out.println("<td>" + rs.getString("name") + "</td>");
+                out.println("<td>" + rs.getString("email") + "</td>");
+                out.println("<td>" + rs.getString("message") + "</td>");
+                out.println("<td>" + rs.getTimestamp("created_at") + "</td>");
+                out.println("</tr>");
+            }
+            out.println("</table>");
+            out.println("<a href='logout'>Logout</a>");
+            out.println("</body></html>");
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace(out);
+        }
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }
