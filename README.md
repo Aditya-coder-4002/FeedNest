@@ -25,8 +25,4 @@ cd FeedNest
 mvn clean package -DskipTests
 # WAR will be in target/*.war (e.g. target/feednest.war)
 ```
-- With Gradle:
-```bash
-./gradlew clean build -x test
-# WAR will be in build/libs/*.war
-```
+
